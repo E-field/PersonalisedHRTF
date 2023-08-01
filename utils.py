@@ -1,8 +1,7 @@
 import os
 import json
-import pickle
 import random
-import matplotlib as plt
+
 
 def read_split_data(root: str, val_rate: float = 0.2):
     random.seed(0)
@@ -26,9 +25,13 @@ def read_split_data(root: str, val_rate: float = 0.2):
     for cla in ear_class:
         cla_path = os.path.join(root, cla)
         images = [os.path.join(root, cla, i) for i in os.listdir(cla_path) if os.path.splitext(i)[-1] in supported]
+        # print(images)
         image_class = class_indices[cla]
         every_class_num.append(len(images))
-        val_path = random.sample(images, k=int(len(images) * val_rate))
+        images_without_r = [os.path.join(root, cla, i) for i in os.listdir(cla_path) if (os.path.splitext(i)[-1] in supported) and ('R' not in i) and ('r' not in i)]
+        # print("images_without_r:")
+        # print(images_without_r)
+        val_path = random.sample(images_without_r, k=int(len(images) * val_rate))
 
         for img_path in images:
             if img_path in val_path:
